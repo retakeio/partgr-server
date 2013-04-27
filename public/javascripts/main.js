@@ -24,8 +24,20 @@ function moveImg (e) {
 	output.innerHTML = e.pageY + ' ' + (width - e.pageX - img.width);
 	var offset = (width - e.pageX - img.width);
 	if (offset < 0) {
-		
+
 	}
+}
+
+function drawImage () {
+
+	var c = document.getElementById("canvas");
+	c.width = img.width;
+	c.height = img.height;
+	var ctx = c.getContext("2d");
+	ctx.drawImage(img,10,10);
+	var data = canvas.toDataURL();
+	sendMsg(data);
+
 }
 
 function receiving (img) {

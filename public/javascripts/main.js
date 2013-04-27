@@ -54,7 +54,7 @@ socket.on('ready', function (data) {
 socket.on('newmsg', handleMsg);
 
 function handleMsg (msg) {
-	console.log(msg);
+	img.src = msg;
 }
 
 function sendMsg (msg) {

@@ -1,12 +1,9 @@
 var socket = io.connect('http://10.20.0.118:3000')
 	, news = io.connect('http://10.20.0.118:3000/news')
-	, img = document.querySelector('img')
 	, output = document.querySelector('#output')
-	, width = document.width;
-
-img.addEventListener('dragstart', function (e) { e.preventDefault(); return false; });
-
-document.body.addEventListener('mousemove', moveImg, false);
+	, width = document.width
+	, img
+	;
 
 function moveImg (e) {
 	img.style['top'] = e.pageY + 'px'; 
@@ -60,3 +57,49 @@ function handleMsg (msg) {
 function sendMsg (msg) {
 	socket.emit('msg', msg);
 }
+
+var doc = document.documentElement;
+doc.ondragover = function () { this.className = 'hover'; return false; };
+doc.ondragend = function () { this.className = ''; return false; };
+doc.ondrop = function (event) {
+  event.preventDefault && event.preventDefault();
+  this.className = '';
+
+  // now do something with:
+  var files = event.dataTransfer.files;
+  console.log(files);
+
+  if (acceptedTypes[files[0].type] === true) {
+  var reader = new FileReader();
+  reader.onload = function (event) {
+    var image = new Image();
+    image.src = event.target.result;
+    image.width = 500;
+    document.body.appendChild(image);
+
+    img = image;
+	img.addEventListener('dragstart', function (e) { e.preventDefault(); return false; });
+	document.body.addEventListener('mousemove', moveImg, false);
+
+  };
+
+  reader.readAsDataURL(files[0]);
+}
+
+  return false;
+};
+
+var dndSupported = function () {
+  var div = document.createElement('div');
+  return ('draggable' in div) || ('ondragstart' in div && 'ondrop' in div);
+};
+
+if (!dndSupported()) {
+	alert('drag n drop not supported');
+}
+
+var acceptedTypes = {
+  'image/png': true,
+  'image/jpeg': true,
+  'image/gif': true
+};

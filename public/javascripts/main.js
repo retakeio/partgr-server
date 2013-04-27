@@ -8,16 +8,6 @@ img.addEventListener('dragstart', function (e) { e.preventDefault(); return fals
 
 document.body.addEventListener('mousemove', moveImg, false);
 
-// img.addEventListener('mousedown', function () {
-// 	console.log('mousedown');
-// 	document.body.addEventListener('mousemove', moveImg, false);
-// }, false);
-
-// img.addEventListener('mouseup', function () {
-// 	console.log('mouseup');
-// 	document.body.removeEventListener('mousemove', moveImg, false);
-// }, false);
-
 function moveImg (e) {
 	img.style['top'] = e.pageY + 'px'; 
 	img.style['left'] = e.pageX + 'px';

@@ -66,29 +66,3 @@ io.sockets.on('connection', function (socket) {
   });
 
 });
-
-// io.sockets.on('connection', function (socket) {
-//   socket.join('lobby');
-//   socket.on('set nickname', function (name) {
-//     chatList.push(name);
-//     socket.set('nickname', name, function () {
-//       socket.emit('ready', chatList);
-//       socket.broadcast.emit('userlist', chatList);
-//       socket.emit('buffer', chatBuffer);
-//     });
-//   });
-
-  // socket.on('disconnect', function () { 
-  //   socket.get('nickname', function(err, name){
-  //     chatList.splice(chatList.indexOf(name), 1);
-  //     var data = {
-  //     name : name,
-  //     message : 'Has left the chat',
-  //     time : new Date()
-  //     }
-  //     socket.broadcast.emit('message', data);
-  //     socket.broadcast.emit('userlist', chatList);
-  //   })
-  // });
-
-// });

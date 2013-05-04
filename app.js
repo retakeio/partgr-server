@@ -8,10 +8,11 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
+  , uaparser = require('ua-parser')
   , buffer    = []
   , chatList     = []
   , chatBuffer = []
-  , users = {}
+  , users = {};
   ;
 
 var app = express();
@@ -34,7 +35,7 @@ app.configure('development', function(){
 
 app.get('/', function (req, res) {
   res.render('index', {
-    title : 'parteger'
+    title : 'shipit'
   });
 });
 
@@ -43,25 +44,50 @@ var server = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server, {log: false});
 
 io.sockets.on('connection', function (socket) {
+  console.log('connected');
   socket.emit('connected');
   socket.on('set nickname', function (name) {
+    console.log('settings nickname');
     socket.set('nickname', name, function () {
       socket.emit('ready', 'Hello, ' + name);
+      users[name] = {};
     });
   socket.on('set location', function (location) {
     socket.get('nickname', function (err, name) {
-      console.log('location of ' + name, location);
+      users[name].location = location.pos;
     });
   });
+  socket.on('uastring', function (uastring) {
+    socket.get('nickname', function (err, name) {
+
+      var r = uaparser.parse(uastring);
+      // console.log(r.ua.toString());
+      users[name].family = r.ua.family || r.ua.toString();
+      users[name].device = r.device.family;
+
+      socket.broadcast.emit('userlist', users);
+      socket.emit('userlist', users);
+
+      console.log(users);
+
+    });
   });
+});
 
   socket.on('msg', function (data) {
     socket.get('nickname', function (err, name) {
       console.log('Chat message by ', name);
       socket.broadcast.emit('newmsg', data);
+    });
+  });
+
+  socket.on('disconnect', function () { 
+    socket.get('nickname', function(err, name){
+      delete users[name];
+      socket.broadcast.emit('userlist', users);
     });
   });
 

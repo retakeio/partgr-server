@@ -1,21 +1,11 @@
-var socket = io.connect('http://10.20.0.118:3000')
-    , output = document.querySelector('#output')
-    , width = document.width
-    , img
-    ;
+var socket = io.connect('http://shipit.jit.su')
+	, news = io.connect('http://shipit.jit.su/news')
+	, output = document.querySelector('#output')
+	, width = document.width
+	, img = document.createElement('img');
+	;
 
-
-function sendImage () {
-    var c = document.getElementById("canvas");
-    var ctx = c.getContext("2d");
-    var data;
-    c.width = img.width;
-    c.height = img.height;
-    ctx.drawImage(img,10,10);
-    data = canvas.toDataURL();
-    sendMsg(data);
-}
-
+document.body.appendChild(img);
 
 socket.on('connected', function () {
     console.log('connected');
